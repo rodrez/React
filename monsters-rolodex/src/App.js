@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import './App.css'
 // Import our Component
 import { CardList } from './components/card-list/card-list.component'
-
+import { SearchBox } from './components/search-box/search-box.component'
 
 class App extends Component {
   // Enable us to use this.state
@@ -11,7 +11,8 @@ class App extends Component {
 
     // The state of our component, in this case empty array
     this.state = {
-      monsters: []
+      monsters: [],
+      searchField: ''
     }
   }
 
@@ -27,11 +28,25 @@ class App extends Component {
     
   }
 
+  handleChange = (e) => {
+    this.setState({searchField: e.target.value})
+  }
+
   render() {
+    const {monsters, searchField} = this.state
+
+    // Filters the monsters based on search field values
+    const filteredMonsters = monsters.filter(monster => 
+      monster.name.toLowerCase().includes(searchField.toLowerCase())
+      )
     return (
       <div className='App'>
+        
+        <h1> Monsters Rolodex </h1> 
         {/* Card List Component to wrap our new array (from map) */}
-        <CardList monsters={this.state.monsters}>
+        <SearchBox placeholder={"Search Monsters"}
+         handleChange={this.handleChange} />
+        <CardList monsters={filteredMonsters}>
         
         </CardList>
       </div>
