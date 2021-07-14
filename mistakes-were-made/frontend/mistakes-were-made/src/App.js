@@ -54,7 +54,7 @@ class App extends Component {
         return (
             <div>
                 <div>
-                    <TodoInput createTodo={this.createItem}></TodoInput>
+                    <TodoInput ></TodoInput>
                 </div>
                 <CardGroups title={"Mistakes on the Works"}>
                     {this.state.todos.map(item => (
