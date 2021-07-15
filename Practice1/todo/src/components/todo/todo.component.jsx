@@ -1,11 +1,17 @@
 // import React from "react";
 
-const Todo = (props) => (
-    <div id={"todo-"+props.key}>
-        <h1>{props.title}</h1>
-        <span>{props.value}</span>
-        <button onClick={() => this.props.del(this.props.item.id)}>Delete</button>
-    </div>
-)
+import {Component} from "react";
 
-export default Todo
+class TodoItem extends Component {
+    render() {
+        return (<div>
+                <h1>{this.props.title}</h1>
+                <span>{this.props.value}</span>
+                <button onClick={() => this.props.del(this.props.id)}>Delete</button>
+            </div>
+        )
+    }s
+
+}
+
+export default TodoItem

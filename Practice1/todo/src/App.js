@@ -1,6 +1,6 @@
 import './App.css';
 import React from "react";
-import Todo from "./components/todo/todo.component";
+import TodoItem from "./components/todo/todo.component";
 
 const todoItems = [
     {
@@ -34,8 +34,8 @@ class App extends React.Component {
         })
     }
     handleDelete = itemId => {
-        const items = this.state.items.filter(item => item.id !== itemId);
-        this.setState({items: items});
+        const items = this.state.todoList.filter(item => item.id !== itemId);
+        this.setState({todoList: items}, () => console.log(this.state.todoList));
     };
 
     render() {
@@ -46,8 +46,8 @@ class App extends React.Component {
                 <input id={"v"} type="text" placeholder={"Enter value"}/>
                 <button onClick={this.handleClick}> Add Element</button>
                 {this.state.todoList.map(item => (
-                        <Todo iden={item.id} key={item.id} title={item.title} value={item.value}
-                              del={this.handleClick}> </Todo>
+                        <TodoItem iden={item.id} key={item.id} title={item.title} value={item.value}
+                              del={this.handleDelete}> </TodoItem>
                     )
                 )}
             </div>
