@@ -1,76 +1,81 @@
 import './App.css';
 import axios from "axios";
 import { Component } from "react";
-import Card from "./components/card/card.component";
-import CardGroups from "./components/card-group/card-group.component";
-import TodoInput from "./components/todo-input/todo-input.component";
 
 class App extends Component {
     state = {
-        todos: []
+        todos: [],
+        title: "",
+        description: "",
     }
+
     componentDidMount() {
-        this.refreshList();
-      }
-    
-      refreshList = () => {
-        axios
-          .get("/api/todos/")
-          .then((res) => this.setState({ todos: res.data }))
-          .catch((err) => console.log(err));
-          console.log(this.setState.todos)
-      };
-
-    getTodos() {
-        axios
-            .get('http://127.0.0.1:8000/api/todos/')
-            .then(res => {
-                this.setState({ todos: res.data })
-                console.log(this.state.todos)
-            })
+        this.getTodos();
     }
 
-    createItem = () => {
-        const item = { title: "", description: "" };
+    getTodos = () => {
+        axios.get("/api/todos/")
+            .then(response => {
+                this.setState({ todos: response.data });
+            })
+            .catch(error => {
+                console.log(error.response.data);
+            });
+    }
 
-        this.setState({ todos: item });
-    };
 
-    handleSubmit = (item) => {
-        this.toggle();
+    // Post a new todoItem to the server
+    addTodoItem = e => {
+        e.preventDefault();
+        console.log(this.state.todos);
+        axios.post("/api/todos/", { title: this.state.title, description: this.state.description })
+            .then(response => {
+                this.setState({ todos: this.state.todos.concat(response.data) });
+                this.setState({ title: '' });
+                this.setState({ description: '' });
+            })
+            .catch(error => {
+                console.log(error.response.data);
+            });
+    }
 
-        if (item.id) {
-            axios
-                .put(`/api/todos/${item.id}/`, item)
-                .then((res) => this.refreshList());
-            return;
-        }
+    // Delete a todoItem from the server
+    deleteTodo = (id) => {
         axios
-            .post("/api/todos/", item)
-            .then((res) => this.refreshList());
-    };
+            .delete(`/api/todos/${id}/`)
+            .then(res => {
+                this.getTodos();
+            })
+            .catch(err => console.log(err.response.data));
+    }
+
 
     render() {
         return (
-            <div>
-                <div>
-                    <TodoInput ></TodoInput>
-                </div>
-                <CardGroups title={"Mistakes on the Works"}>
-                    {this.state.todos.map(item => (
-                        <div className="w-3/12">
-                            <div>
-                                <Card title={item.title} key={item.id} description={item.description}
-                                    date={item.date}> </Card>
+            <div className="App">
+                {/* Create a list of todo items */}
+                <div className="todo-list">
+                    {this.state.todos.map(todo => {
+                        return (
+                            <div className="todo-item" key={todo.id}>
+                                <span className="todo-title bg-indigo-500 px-4 py-2 text-white">{todo.title}</span>
+                                <span className="todo-description bg-indigo-200 px-4 py-2">{todo.description}</span>
+                                <button className="todo-remove bg-red-600 p-2 rounded text-white" onClick={() => this.deleteTodo(todo.id)}>X</button>
                             </div>
-                        </div>
-                    ))}
+                        )
+                    })}
+                </div>
+                {/* send todo title and description */}
+                <form className="todo-form" onSubmit={this.addTodoItem}>
+                    <input className="todo-title" type="text" placeholder="Todo Title" value={this.state.title} onChange={e => this.setState({ title: e.target.value })} />
+                    <input className="todo-description" type="text" placeholder="Todo Description" value={this.state.description} onChange={e => this.setState({ description: e.target.value })} />
+                    <button className="todo-add bg-blue-500 px-4 py-2" type="submit">Add Todo</button>
+                </form>
 
-                </CardGroups>
+
             </div>
-        )
+        );
     }
-
 }
 
 export default App;

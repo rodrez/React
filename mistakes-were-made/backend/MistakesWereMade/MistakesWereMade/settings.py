@@ -47,6 +47,23 @@ INSTALLED_APPS = [
 
 ]
 
+# APPEND_SLASH = False
+CORS_ORIGIN_WHITELIST = [
+     'http://localhost:3000',
+     "http://localhost:8000",
+]
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+        
+    )
+}
+CSRF_COOKIE_NAME = "csrftoken"
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -58,9 +75,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
 ]
-CORS_ORIGIN_WHITELIST = [
-     'http://localhost:3000'
-]
+
 
 ROOT_URLCONF = 'MistakesWereMade.urls'
 
